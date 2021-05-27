@@ -223,8 +223,7 @@ count_if(gt(12), data$WC.R)
 tidydataIndexP %>%
   group_by(Index) %>%
   identify_outliers(Score)
-## For the CELF, we have no reason to assume the score of subject 2119 is not representative or an overestimation of their capabilities
-## For the PPVT, we have no reason to assume the score of subject 2123 is not representative or an overestimation of their capabilities
+## For the CELF, we have no reason to assume the score of subject X is not representative or an overestimation of their capabilities
 
 ## normality qqplot
 ggqqplot(data$KS)
@@ -448,7 +447,7 @@ anova(LModelPPVT)
           ### Categories: Number of children in categories Language +/- and Speech +/- ###
 ##########################################################################################################
 
-### NNA UITZOEKEN HOE JE ONDERSTAANDE IN ……N TABEL WEERGEEFT ####
+### NNA UITZOEKEN HOE JE ONDERSTAANDE IN ??N TABEL WEERGEEFT ####
 
 ### Receptive language (RTI) vs. Speech (LogoV)
 RTI_NP <- dataIndexLogoV %>%  ## No Problems
@@ -605,8 +604,6 @@ plotIndexP1 <- ggplot(tidydataIndexP, aes(x= Index, y = Score, color = Index, fi
   geom_hline(yintercept = 115, color = "black", alpha = 0.5,  size = 1, linetype = "longdash") +
   geom_hline(yintercept = 100, color = "black", alpha = 0.5,  size = 1, linetype = "solid")
 
-#geom_errorbar(data = descriptivesIndexP, aes(ymin= lower, ymax = upper), width = 0.2) +
-
 # Plot met losse datapunten, jitter op positie X en Y
 ggplot(tidydataIndexP, aes(x= Index, y = Score)) +
   geom_boxplot(size = 0.7, outlier.shape = 21, outlier.size = 3, outlier.alpha = 0.5) + 
@@ -620,29 +617,3 @@ ggplot(tidydataIndexP, aes(x= Index, y = Score)) +
   geom_hline(yintercept = 100, color = "black", alpha = 0.7,  size = 1, linetype = "solid")
 
 
-
-
-# Plot met losse datapunten, jitter op positie X en Y
-ggplot(tidydataIndexP, aes(x = Index, y = Score, color = Index, fill = Index)) +
-  geom_dotplot(binaxis = "y" , stackdir = "center", dotsize = 0.7, color = "black", alpha = 0.9) +
-  theme_bw(base_size = 16) +
-  # scale_shape(solid = FALSE) +
-  # optional: lijnen om SD CELF normen aan te geven
-  geom_hline(yintercept = 78, color = "black", alpha = 0.7, size = 1, linetype = "dotdash") +
-  geom_hline(yintercept = 85, color = "black", alpha = 0.7, size = 1, linetype = "longdash") +
-  geom_hline(yintercept = 115, color = "black", alpha = 0.7,  size = 1, linetype = "longdash") +
-  geom_hline(yintercept = 100, color = "black", alpha = 0.7,  size = 1, linetype = "solid")
-
-
-boxplot(Score ~ Index, data = tidydataIndexP, 
-        outline = FALSE,     ## avoid double-plotting outliers, if any
-        main = 'boxplot + beeswarm') +
-beeswarm(Score ~ Index, data = tidydataIndexP,
-         col = 4, pch = 16, panel.first = abline(3,0), add = TRUE)
-
-
-# col = 4, pch = 16, add = FALSE
-
-ggplot(data, aes(x= LogoV, y = ETI))+
-  geom_point(alpha = 0.3, position = position_jitter(width = 0.15), na.rm= TRUE) +
-  geom_smooth (method = "lm", color = "blue", alpha = 0.5, linetype = "solid", size = 0.5, na.rm= TRUE)
