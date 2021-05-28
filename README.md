@@ -1,4 +1,10 @@
-# [PROJECT NAME]
+# Language profile of young children with 22q11DS (3T project)
+
+# This project looks at the language skills of young children with the 22q11.2 deletion syndrome
+# This repository contains the code used for analysis in paper X
+# This code is specifically made for the analysis of specific data
+# The original data reported on in paper X cannot be shared, but there is a fake data file (randomly generated taking into account the context of the study)
+# The R markdown file provides further explanation
 
 ## Project organization
 - PG = project-generated
@@ -7,10 +13,7 @@
 ```
 .
 ├── .gitignore
-├── CITATION.md
-├── LICENSE.md
 ├── README.md
-├── requirements.txt
 ├── bin                <- Compiled and external code, ignored by git (PG)
 │   └── external       <- Any external source code, ignored by git (RO)
 ├── config             <- Configuration files (HW)
@@ -31,4 +34,4 @@
 
 ## License
 
-This project is licensed under the terms of the [MIT License](/LICENSE.md)
+This project is licensed under the terms of X
