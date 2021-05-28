@@ -1,0 +1,164 @@
+---
+title: "Language profile preschoolers with 22q11DS"
+output: ""
+  word_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## R Markdown
+
+This script produces the outcomes reported in [paper X]
+
+R version 4.0.2 (2020-06-22)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 8.1 x64 (build 9600)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] effectsize_0.4.4-1 broom_0.7.1        ppcor_1.1          MASS_7.3-51.6      expss_0.10.6       pastecs_1.3.21     forcats_0.5.0      stringr_1.4.0     
+ [9] purrr_0.3.4        readr_1.4.0        tibble_3.0.3       tidyverse_1.3.0    e1071_1.7-3        rstatix_0.6.0      ggpubr_0.4.0       tidyr_1.1.2       
+[17] dplyr_1.0.2        ggplot2_3.3.2      readxl_1.3.1      
+
+loaded via a namespace (and not attached):
+ [1] httr_1.4.2         jsonlite_1.7.1     carData_3.0-4      modelr_0.1.8       assertthat_0.2.1   blob_1.2.1         cellranger_1.1.0   bayestestR_0.9.0  
+ [9] yaml_2.2.1         pillar_1.4.6       backports_1.1.10   glue_1.4.2         digest_0.6.25      ggsignif_0.6.0     checkmate_2.0.0    rvest_0.3.6       
+[17] colorspace_1.4-1   htmltools_0.5.0    pkgconfig_2.0.3    haven_2.3.1        scales_1.1.1       openxlsx_4.2.3     rio_0.5.16         htmlTable_2.1.0   
+[25] generics_0.0.2     car_3.0-10         ellipsis_0.3.1     withr_2.3.0        cli_2.0.2          magrittr_1.5       crayon_1.3.4       evaluate_0.14     
+[33] fs_1.5.0           fansi_0.4.1        xml2_1.3.2         foreign_0.8-80     class_7.3-17       tools_4.0.2        data.table_1.13.0  hms_0.5.3         
+[41] lifecycle_0.2.0    matrixStats_0.57.0 munsell_0.5.0      reprex_0.3.0       zip_2.1.1          compiler_4.0.2     rlang_0.4.7        grid_4.0.2        
+[49] parameters_0.13.0  rstudioapi_0.11    htmlwidgets_1.5.2  rmarkdown_2.8      boot_1.3-25        gtable_0.3.0       abind_1.4-5        DBI_1.1.0         
+[57] curl_4.3           R6_2.4.1           lubridate_1.7.9    knitr_1.30         utf8_1.1.4         insight_0.13.2     stringi_1.5.3      Rcpp_1.0.5        
+[65] vctrs_0.3.4        dbplyr_1.4.4       tidyselect_1.1.0   xfun_0.18
+
+```{r}
+# Clear workspace:
+rm(list=ls())
+
+## load packages
+library(readxl)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(ggpubr) 
+library(rstatix)
+library(e1071)
+library(tidyverse)
+library(pastecs)
+library(expss)
+library(ppcor)
+library(effectsize)
+```
+#Variables
+Subject (numerical)   = anonymous subject ID 
+AgeMd   (numerical)   = age in months
+AgeYd   (numerical)   = age in years
+Sex     (numerical)   = numerical dummy for sex, 1=female, 2=male
+IQ      (numerical)   = Intelligence Quotient, age normed score, range 55 - 145, M = 100, SD = 15
+SES     (numerical)   = Socioeconomic status, here: parental education on a scale from 1-9 based in Dutch education system, see categories below.
+FstWord (numerical)   = numerical dummy for category age of first word, see answer categories below
+FstSent (numerical)   = age in months
+PPVT    (numerical)   = WBQ score of the Peabody Picture Vocabulary Test, age normed score, range 55 - 145, M = 100, SD = 15 
+#CELF Preschool-2-NL, age normed score, range 55 - 145, M = 100, SD = 15
+ KS      (numerical)   = Core Language Index score of the C. Subtests
+ RTI     (numerical)   = CELF Preschool-2-NL 
+ ETI     (numerical)   = CELF Preschool-2-NL
+#
+ ZB      (numerical) 
+ WS      (numerical) 
+ AW      (numerical) 
+ BAV     (numerical) 
+ ZH      (numerical) 
+ EC      (numerical) 
+ WC.R    (numerical) 
+LogoV   (numerical) 
+
+
+SES categories (in Dutch)
+Both mother and father were asked the highest completed level of education based on these categories: 
+1.	Geen opleiding (lager onderwijs: niet afgemaakt)
+2.	Lager onderwijs (lagere school, basisschool, speciaal basisonderwijs)
+3.	Lager of voorbereidend beroepsonderwijs (zoals huishoudschool, vbo, lbo, lts, leao, lhno, vmbo)
+4.	Middelbaar algemeen voortgezet onderwijs (zoals mavo, (m)ulo, ivo, vmbo-t)
+5.	Mbo 2 of 3 jaar
+6.	Middelbaar beroepsonderwijs en beroepsbegeleidend onderwijs (zoals mbo 4 jaar, mts, meao, mhno, bol, bbl, in(t)as)
+7.	Hoger algemeen en voorbereidend wetenschappelijk onderwijs (zoals havo, vwo, atheneum, gymnasium, hbs, mms)
+8.	Hoger beroepsonderwijs (zoals hbo, hts, heao, hhno)
+9.	Wetenschappelijk onderwijs (universiteit, hbo master)
+
+
+First Word / Sentence
+Parents were asked "How old was your child when it spoke its first word/sentence?"
+Word                                                Sentences 
+1 = no words yet                                    1 = no sentences yet, 
+2 = younger than most children (<10 months)         2 = younger (<18 months) 
+3 = same age (11-15 months)                         3 = same age (19-24 months)
+4 = slightly older (16-24 months)                   4 = slightly older (25-30 months) 
+5 = older (> 25 months)                             5 = older (> 31 months)
+
+
+LogoV inversion
+Label                                    Original         New
+ Normal                                     0              5
+ Different from other children's speech,
+    but not enough to cause comment         1              4
+ Different enough to provoke comment, 
+    but possible to understand most speech  2              3
+ Only just intelligible to strangers        3              2
+ Impossible to understand                   4              1
+ 
+ 
+```{r}
+## set working directory
+setwd("C:/Users/Emma/Documents/Thuis werken/good-enough-project-template/data/processed")
+
+## load data
+data <- read_excel("Datafile_repo.xlsx") #this data has been generated at random 
+
+### inverting LogoV scores 0-4 to 5-1 (LogoV 0 = new 5, 1 = 4, 2 = 3, 3 = 2, 4 = 1)
+data$LogoV <- 5-data$LogoV
+
+
+### Dataframes ###
+dataIndexP <- data[c("Subject", "PPVT", "KS", "RTI", "ETI")] 
+dataERTI <- data[c("Subject", "RTI", "ETI")]
+dataSubtest <- data[c("Subject", "ZB", "AW", "ZH", "WS", "BAV", "EC", "WC.R")]
+dataIndexLogoV <- data[c("Subject", "PPVT", "KS", "RTI", "ETI", "LogoV")]
+IndexPdata <- data[c("Subject","AgeMd", "Sex", "SES", "LogoV", "KS", "ETI", "RTI", "PPVT")] #missing data demographic comparison
+dataTask_Missing <- data[c("Subject", "PPVT", "ZB", "AW", "ZH", "WS", "BAV", "EC", "WC.R")]
+
+# Long format
+tidydataSubtest <- dataSubtest %>% gather(Task, Score, -c(Subject))
+tidydataIndexP <- dataIndexP %>% gather(Index, Score, -c(Subject))
+tidydataIndexLogoV <- dataIndexLogoV %>% gather(Index, Score, -c(Subject, LogoV))
+tidydataERTI <- dataIndexP %>% gather(Index, Score, -c(Subject))
+
+# For missing data comparison
+IndexPdata_comp <- IndexPdata[complete.cases(IndexPdata), ]
+dataERTI_comp <- dataERTI[complete.cases(dataERTI), ]
+ExcludedIndexP <- subset(IndexPdata, is.na(ETI) == TRUE | is.na(RTI) == TRUE | is.na(KS) == TRUE | is.na(PPVT) == TRUE)
+```
+ 
+ 
+ c
+ 
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
